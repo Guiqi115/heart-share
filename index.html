@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>送你一颗会跳动的爱心 ❤️</title>
+  <meta name="description" content="一个可分享给微信好友的 H5 爱心动效页面，点击爱心生成飘落小爱心，支持分享引导。">
+  <!-- Open Graph for nicer previews when possible -->
+  <meta property="og:title" content="送你一颗会跳动的爱心 ❤️" />
+  <meta property="og:description" content="点击查看这颗可爱的跳动爱心，并把它分享给你的朋友。" />
+  <meta property="og:type" content="website" />
+
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width:100%; height:100%; margin:0; }
+    body {
+      display:flex; align-items:center; justify-content:center; overflow:hidden;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: linear-gradient(135deg, #ffeef3, #fff);
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+
+    .stage { text-align:center; padding:36px; }
+
+    .heart {
+      position: relative; width: min(38vmin, 320px); height: min(38vmin, 320px);
+      margin: 0 auto 20px; transform: rotate(45deg); cursor:pointer;
+      filter: drop-shadow(0 10px 22px rgba(255,75,110,.28));
+      transition: transform .18s ease;
+    }
+
+    .heart-core {
+      position:absolute; right:0; bottom:0; width:70%; height:70%;
+      background: linear-gradient(135deg,#ff4773,#ff9aab);
+      border-radius:18%; transform-origin:50% 50%;
+      animation: beat 1s infinite cubic-bezier(.15,.84,.54,1);
+      box-shadow: inset 0 8px 18px rgba(255,255,255,0.12), 0 6px 18px rgba(255,95,126,0.15);
+    }
+
+    .heart::before, .heart::after{
+      content:''; position:absolute; width:70%; height:70%; background:linear-gradient(135deg,#ff4773,#ff9aab); border-radius:50%;
+    }
+    .heart::before{ left:0; top:-35%; }
+    .heart::after{ left:35%; top:0; }
+
+    @keyframes beat{
+      0%{ transform: scale(1); }
+      14%{ transform: scale(1.12) rotate(-2deg); }
+      28%{ transform: scale(1) rotate(2deg); }
+      40%{ transform: scale(1.06) rotate(-1deg); }
+      100%{ transform: scale(1) rotate(0); }
+    }
+
+    .heart.paused .heart-core{ animation-play-state:paused; }
+
+    .hint{ margin-bottom:18px; color:#8b6872; font-size:14px; }
+
+    .share-btn{ padding:12px 22px; border:0; border-radius:999px; color:#fff; background:linear-gradient(135deg,#ff5f7e,#ff9aa2); font-size:15px; cursor:pointer; box-shadow:0 6px 18px rgba(255,95,126,.25); }
+    .share-btn:active{ transform:scale(.98); }
+
+    .float-heart{ position:fixed; width:18px; height:18px; z-index:9999; pointer-events:none; transform:rotate(45deg); background:linear-gradient(135deg,#ff8aa0,#ff5f7e); border-radius:20%; animation:floatUp 1.6s ease-out forwards; box-shadow:0 6px 18px rgba(255,95,126,0.12); }
+    .float-heart::before, .float-heart::after{ content:''; position:absolute; width:100%; height:100%; background:inherit; border-radius:50%; }
+    .float-heart::before{ top:-50%; left:0; }
+    .float-heart::after{ left:50%; top:0; }
+
+    @keyframes floatUp{
+      0%{ transform: translateY(0) scale(0.9) rotate(15deg); opacity:1; }
+      50%{ transform: translateY(-40px) scale(1.1) rotate(-8deg); }
+      100%{ transform: translateY(-160px) scale(0.8) rotate(-30deg); opacity:0; }
+    }
+
+    .share-guide{ position:fixed; inset:0; z-index:10000; background:rgba(0,0,0,.65); }
+    .share-guide[hidden]{ display:none; }
+    .guide-card{ position:absolute; top:24px; right:20px; width:270px; padding:22px; border-radius:18px; color:#663d49; text-align:center; background:#fff7f9; box-shadow:0 12px 40px rgba(0,0,0,.2); }
+    .guide-arrow{ position:absolute; top:-12px; right:8px; color:white; font-size:48px; transform:rotate(-25deg); }
+    .guide-card h2{ margin:8px 0 12px; }
+    .guide-card p{ line-height:1.6; font-size:14px; }
+    .guide-card button{ padding:9px 20px; border:0; border-radius:999px; color:white; background:#ff6f91; cursor:pointer; }
+
+    @media (max-width:420px){ .heart{ width:220px; height:220px; } .hint{ font-size:13px; } .float-heart{ width:14px; height:14px; } }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <div id="heart" class="heart" title="点击爱心">
+      <div class="heart-core" aria-hidden="true"></div>
+    </div>
+
+    <div class="hint">点击爱心生成小爱心，点击右侧按钮分享给微信</div>
+
+    <button id="shareBtn" class="share-btn">分享给微信好友</button>
+  </main>
+
+  <div id="shareGuide" class="share-guide" hidden>
+    <div class="guide-card">
+      <div class="guide-arrow">↗</div>
+      <h2>分享到微信</h2>
+      <p>请点击右上角的 <strong>···</strong>，选择“发送给朋友”或“分享到朋友圈”</p>
+      <button id="closeGuide">知道了</button>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const heart = document.getElementById('heart');
+      const shareBtn = document.getElementById('shareBtn');
+      const shareGuide = document.getElementById('shareGuide');
+      const closeGuide = document.getElementById('closeGuide');
+      let paused = false;
+
+      heart.addEventListener('click', (e)=>{
+        paused = !paused;
+        heart.classList.toggle('paused', paused);
+        spawnHearts(e.clientX, e.clientY, 8);
+      });
+
+      function spawnHearts(x,y,count){
+        for(let i=0;i<count;i++){
+          const fh = document.createElement('div');
+          fh.className = 'float-heart';
+          const h1 = randColor();
+          const h2 = randColor(false, h1);
+          fh.style.background = `linear-gradient(135deg, ${h1}, ${h2})`;
+          const dx = (Math.random()-0.5) * 80;
+          const dy = (Math.random()-0.5) * 40;
+          fh.style.left = (x + dx) + 'px';
+          fh.style.top = (y + dy) + 'px';
+          fh.style.animationDelay = (Math.random()*0.25).toFixed(2) + 's';
+          fh.style.transform = `rotate(${(Math.random()*60-30)}deg)`;
+          document.body.appendChild(fh);
+          fh.addEventListener('animationend', ()=>fh.remove(), { once:true });
+        }
+      }
+
+      function randColor(soft=true, avoid){
+        const palette = ['#ff7a9b','#ff5f7e','#ff9aa2','#ffb3c6','#ff6f91','#ff8fab','#ffadcc','#ffc1d9','#ff6b6b','#ff8a65','#ffab40'];
+        let c;
+        do { c = palette[Math.floor(Math.random()*palette.length)]; } while (avoid && c===avoid);
+        return c;
+      }
+
+      shareBtn.addEventListener('click', async ()=>{
+        if (navigator.share){
+          try{
+            await navigator.share({ title:'送你一颗会跳动的爱心 ❤️', text:'点击查看这颗特别的爱心', url:window.location.href });
+            return;
+          } catch(err){ if (err.name==='AbortError') return; }
+        }
+        shareGuide.hidden = false;
+      });
+
+      closeGuide.addEventListener('click', ()=>{ shareGuide.hidden = true; });
+      shareGuide.addEventListener('click', (e)=>{ if (e.target === shareGuide) shareGuide.hidden = true; });
+
+      window.addEventListener('keydown', (e)=>{ if (e.code==='Space'){ const rect = heart.getBoundingClientRect(); spawnHearts(rect.left + rect.width/2, rect.top + rect.height/2, 10); e.preventDefault(); } });
+    })();
+  </script>
+</body>
+</html>
