@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>送你一颗会发光的爱心 ❤️</title>
+  <meta name="description" content="一颗会跳动的爱心，送给你。">
+  <meta property="og:title" content="送你一颗会跳动的爱心 ❤️" />
+  <meta property="og:description" content="点击看看，愿你每天都被爱包围。" />
+  <meta property="og:type" content="website" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f8f1f4;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      width: min(92vw, 500px);
+      text-align: center;
+    }
+
+    .heart {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      margin: 0 auto;
+      border-radius: 18px;
+      transform: rotate(-45deg);
+      background: linear-gradient(135deg, #ff5f8d, #ff8ca3);
+      box-shadow: 0 18px 32px rgba(255, 95, 141, 0.22);
+      cursor: pointer;
+      animation: heartBeat 1.4s ease-in-out infinite;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: inherit;
+    }
+
+    .heart::before {
+      top: -110px;
+      left: 0;
+    }
+
+    .heart::after {
+      top: 0;
+      left: 110px;
+    }
+
+    @keyframes heartBeat {
+      0%, 100% {
+        transform: rotate(-45deg) scale(1);
+      }
+      18% {
+        transform: rotate(-45deg) scale(1.1);
+      }
+      35% {
+        transform: rotate(-45deg) scale(0.96);
+      }
+      52% {
+        transform: rotate(-45deg) scale(1.06);
+      }
+    }
+
+    .message {
+      color: #ee7f9b;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+
+    .share-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 28px;
+      font-size: 16px;
+      color: white;
+      background: linear-gradient(135deg, #ff7298, #ff9bb0);
+      box-shadow: 0 10px 20px rgba(255, 115, 155, 0.25);
+      cursor: pointer;
+    }
+
+    .share-btn:active {
+      transform: scale(0.98);
+    }
+
+    .small-heart {
+      position: fixed;
+      z-index: 5;
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
+      transform: rotate(45deg);
+      border-radius: 3px;
+      background: #ff86b0;
+      box-shadow: 0 10px 18px rgba(255, 95, 141, 0.15);
+      animation: floatHeart 1.5s ease-out forwards;
+    }
+
+    .small-heart::before,
+    .small-heart::after {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: inherit;
+    }
+
+    .small-heart::before {
+      top: -7px;
+      left: 0;
+    }
+
+    .small-heart::after {
+      top: 0;
+      left: -7px;
+    }
+
+    @keyframes floatHeart {
+      0% {
+        opacity: 1;
+        transform: translateY(0) rotate(45deg) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-150px) rotate(45deg) scale(0.5);
+      }
+    }
+
+    .share-guide {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .share-guide.show {
+      display: block;
+    }
+
+    .guide-card {
+      position: absolute;
+      top: 20px;
+      right: 18px;
+      width: 270px;
+      padding: 22px;
+      border-radius: 18px;
+      color: #633c50;
+      text-align: center;
+      background: #fff6fa;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .guide-arrow {
+      position: absolute;
+      top: -16px;
+      right: 24px;
+      color: #fff6fa;
+      font-size: 42px;
+      transform: rotate(-25deg);
+    }
+
+    .guide-card h2 {
+      margin: 8px 0 12px;
+      color: #ff5d91;
+      font-size: 20px;
+    }
+
+    .guide-card p {
+      margin: 0 0 14px;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .guide-card button {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 22px;
+      color: white;
+      background: linear-gradient(135deg, #ff7298, #ff9bb0);
+      cursor: pointer;
+    }
+
+    @media (max-width: 420px) {
+      .heart {
+        width: 160px;
+        height: 160px;
+      }
+
+      .heart::before,
+      .heart::after {
+        width: 160px;
+        height: 160px;
+      }
+
+      .heart::before {
+        top: -80px;
+      }
+
+      .heart::after {
+        left: 80px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <div id="heart" class="heart" title="点击爱心"></div>
+
+    <div class="message">
+      点击爱心，愿你今天也被温柔相待
+    </div>
+
+    <button class="share-btn" id="shareBtn">分享给微信好友</button>
+  </main>
+
+  <div id="shareGuide" class="share-guide">
+    <div class="guide-card">
+      <div class="guide-arrow">↗</div>
+      <h2>分享到微信</h2>
+      <p>请点击右上角的 <strong>···</strong>，选择“发送给朋友”或“分享到朋友圈”。</p>
+      <button id="closeGuide">知道了</button>
+    </div>
+  </div>
+
+  <script>
+    const heart = document.getElementById("heart");
+    const shareBtn = document.getElementById("shareBtn");
+    const shareGuide = document.getElementById("shareGuide");
+    const closeGuide = document.getElementById("closeGuide");
+
+    heart.addEventListener("click", (event) => {
+      for (let i = 0; i < 8; i++) {
+        const item = document.createElement("div");
+        item.className = "small-heart";
+        item.style.left = `${event.clientX + (Math.random() - 0.5) * 80}px`;
+        item.style.top = `${event.clientY + (Math.random() - 0.5) * 50}px`;
+        item.style.animationDelay = `${Math.random() * 0.2}s`;
+        document.body.appendChild(item);
+
+        item.addEventListener("animationend", () => {
+          item.remove();
+        }, { once: true });
+      }
+    });
+
+    shareBtn.addEventListener("click", async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "送你一颗会跳动的爱心 ❤️",
+            text: "点击看看，愿你每天都被爱包围。",
+            url: window.location.href
+          });
+          return;
+        } catch (error) {
+          if (error && error.name === "AbortError") return;
+        }
+      }
+
+      shareGuide.classList.add("show");
+    });
+
+    closeGuide.addEventListener("click", () => {
+      shareGuide.classList.remove("show");
+    });
+
+    shareGuide.addEventListener("click", (event) => {
+      if (event.target === shareGuide) {
+        shareGuide.classList.remove("show");
+      }
+    });
+  </script>
+</body>
+</html>
